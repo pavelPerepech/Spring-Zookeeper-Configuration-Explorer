@@ -1,5 +1,5 @@
 # Sorry
-Sorry for very dirty code. My collegues had asked this tool, so i pushed dirty prototype witout tests.
+Sorry for very dirty code. My collegues had asked this tool, so i pushed dirty prototype without tests.
 
 ## What is?
 It is Spring Zookeeper Configuration editor
