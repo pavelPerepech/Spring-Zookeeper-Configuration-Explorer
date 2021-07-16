@@ -9,7 +9,7 @@ import java.util.Properties;
  */
 public interface ZooAccessor {
 
-    void init(String connectionString);
+    void init(String connectionString, String user, String password);
 
     Map<String, byte[]> readLevel(String path);
 

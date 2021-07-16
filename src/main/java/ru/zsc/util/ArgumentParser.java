@@ -15,7 +15,9 @@ public class ArgumentParser {
 
     public enum Option {
         ZOO_HOST("host", "h", "localhost", "Zookeeper host"),
-        ZOO_PORT("port", "p", "2181", "Zookeeper port");
+        ZOO_PORT("port", "p", "2181", "Zookeeper port"),
+        USER("user", "u", null, "Zookeeper user or empty"),
+        PASSWORD("password", "p", null, "Zookeeper password or empty");
 
         private final String fullName;
 
@@ -87,6 +89,8 @@ public class ArgumentParser {
                 .orElseGet(() -> option.getDefaultValue());
     }
 
+    // Standard outputs should not be used directly to log anything
+    @SuppressWarnings("java:S106")
     public static void printOptionsHelp() {
         for(Option option: Option.values()) {
             System.out.println("  " + FULL_PREFIX + option.getFullName() + " value " +

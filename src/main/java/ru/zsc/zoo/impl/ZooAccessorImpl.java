@@ -15,8 +15,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.api.ACLProvider;
 import org.apache.curator.retry.RetryOneTime;
 import org.apache.curator.utils.ZKPaths;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.data.ACL;
 import ru.zsc.util.ZooAccessException;
 import ru.zsc.zoo.ZooAccessor;
 
@@ -28,11 +31,30 @@ public class ZooAccessorImpl implements ZooAccessor {
     private CuratorFramework zoo;
 
     @Override
-    public void init(String connectionString) {
+    public void init(final String connectionString, final String user, final String password) {
         ofNullable(zoo).ifPresent(curatorFramework -> curatorFramework.close());
-        zoo = CuratorFrameworkFactory.newClient(
-                connectionString,
-                new RetryOneTime(100));
+
+        CuratorFrameworkFactory.Builder zooBuilder = CuratorFrameworkFactory.builder()
+                .connectString(connectionString)
+                .retryPolicy(new RetryOneTime(100));
+
+        if (StringUtils.isNoneBlank(user) && StringUtils.isNoneBlank(password)) {
+            final String authString = user + ':' + password;
+            zooBuilder.authorization("digest", authString.getBytes())
+                    .aclProvider(new ACLProvider() {
+                        @Override
+                        public List<ACL> getDefaultAcl() {
+                            return ZooDefs.Ids.CREATOR_ALL_ACL;
+                        }
+
+                        @Override
+                        public List<ACL> getAclForPath(String path) {
+                            return ZooDefs.Ids.CREATOR_ALL_ACL;
+                        }
+                    });
+        }
+
+        zoo = zooBuilder.build();
         zoo.start();
         try {
             zoo.blockUntilConnected(1, TimeUnit.SECONDS);
@@ -83,6 +105,8 @@ public class ZooAccessorImpl implements ZooAccessor {
         return result;
     }
 
+    // Cognitive Complexity of methods should not be too hig
+    @SuppressWarnings("java:S3776")
     private void readLevelAsProperties(
             final Properties properties,
             final String root,

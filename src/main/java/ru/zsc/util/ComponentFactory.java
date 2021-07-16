@@ -34,7 +34,10 @@ public class ComponentFactory {
             synchronized (ZooAccessor.class) {
                 if (Objects.isNull(zooAccessor)) {
                     zooAccessor = new ZooAccessorImpl();
-                    zooAccessor.init(buildConnectionString());
+                    zooAccessor.init(
+                            buildConnectionString(),
+                            argumentParser.getOptionValue(Option.USER),
+                            argumentParser.getOptionValue(Option.PASSWORD));
                 }
             }
         }
