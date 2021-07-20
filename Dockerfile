@@ -1,7 +1,7 @@
 FROM java:8
 
 LABEL "Author"="Pavel Perepech <paul_spb@mail.ru>"
-LABEL "version"="1.0-PRE_BETA"
+LABEL "version"="1.0.1-PRE_BETA"
 
 ENV ZOO_HOST=localhost
 ENV ZOO_PORT=2181

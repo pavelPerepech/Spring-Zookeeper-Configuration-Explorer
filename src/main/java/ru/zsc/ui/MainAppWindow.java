@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 import ru.zsc.ui.PropertyDialog.StoreContext;
 import ru.zsc.util.AppUICtx;
 import ru.zsc.util.ComponentFactory;
-import ru.zsc.util.LineConsumerWriter;
 import ru.zsc.util.LineSupplierReader;
+import ru.zsc.util.PropertiesUtil;
 import ru.zsc.zoo.ZooAccessor;
 
 /**
@@ -193,12 +193,7 @@ public class MainAppWindow extends BasicWindow {
     private void readAsProperties(final String path, final List<String> excludedHolder, Consumer<String> lineConsumer) {
         final Properties properties = ComponentFactory.getInstance().zooAccessor()
                 .readNodeAsProperty(path, excludedHolder);
-        try {
-            properties.store(new LineConsumerWriter(lineConsumer), "");
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    MessageFormat.format("Error convert properties to text caused by: {}", e.getMessage()), e);
-        }
+        PropertiesUtil.toLines(properties, lineConsumer);
     }
 
     @Override

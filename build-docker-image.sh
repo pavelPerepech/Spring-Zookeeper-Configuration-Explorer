@@ -1,1 +1,1 @@
-docker build -t "pavelperepech/zsc:1.0-PRE-BETA" -t "pavelperepech/zsc:latest" .
+docker build -t "pavelperepech/zsc:1.0.1-PRE-BETA" -t "pavelperepech/zsc:latest" .
